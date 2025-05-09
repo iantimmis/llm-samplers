@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.min_p import MinPSampler
+from llm_samplers.min_p import MinPSampler
 
 
 def test_min_p_sampler_initialization():

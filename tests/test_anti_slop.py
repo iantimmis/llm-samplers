@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.anti_slop import AntiSlopSampler
+from llm_samplers.anti_slop import AntiSlopSampler
 
 
 def test_anti_slop_sampler_initialization():

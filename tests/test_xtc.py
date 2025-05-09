@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.xtc import XTCSampler
+from llm_samplers.xtc import XTCSampler
 
 
 def test_xtc_sampler_initialization():

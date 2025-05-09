@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.top_k import TopKSampler
+from llm_samplers.top_k import TopKSampler
 
 
 def test_top_k_sampler_initialization():

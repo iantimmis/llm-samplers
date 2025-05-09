@@ -1,6 +1,6 @@
 import torch
 
-from src.samplers.base import BaseSampler
+from llm_samplers.base import BaseSampler
 
 
 class DummyModel:

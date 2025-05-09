@@ -1,9 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="llm-samplers",
     version="0.1.0",
-    packages=find_packages(),
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=[
         "torch>=2.0.0",
         "transformers>=4.30.0",
@@ -27,4 +28,4 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.8",
-) 
+)

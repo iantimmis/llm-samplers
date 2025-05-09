@@ -87,10 +87,10 @@ The project is configured with a GitHub Action that automatically runs Ruff on a
 
 ## Usage
 
-While the package is installed via `pip install llm-samplers`, you import it using `samplers`:
+While the package is installed via `pip install llm-samplers`, you import it using `llm_samplers`:
 
 ```python
-from samplers import TemperatureSampler, TopKSampler, TopPSampler, MinPSampler, AntiSlopSampler, XTCSampler
+from llm_samplers import TemperatureSampler, TopKSampler, TopPSampler, MinPSampler, AntiSlopSampler, XTCSampler
 
 # Initialize a sampler
 sampler = TemperatureSampler(temperature=0.7)

@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.top_p import TopPSampler
+from llm_samplers.top_p import TopPSampler
 
 
 def test_top_p_sampler_initialization():

@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from src.samplers.temperature import TemperatureSampler
+from llm_samplers.temperature import TemperatureSampler
 
 
 def test_temperature_sampler_initialization():
