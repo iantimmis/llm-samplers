@@ -95,7 +95,8 @@ def test_anti_slop_retry_behavior():
         def __call__(self, input_ids):
             class Output:
                 def __init__(self):
-                    self.logits = torch.tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
+                    # Add batch and sequence dimensions to match model output format
+                    self.logits = torch.tensor([[[1.0, 2.0, 3.0, 4.0, 5.0]]])
             return Output()
     
     sampler = AntiSlopSampler(

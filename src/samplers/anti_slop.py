@@ -24,10 +24,15 @@ class AntiSlopSampler(BaseSampler):
             max_retries: Maximum number of retries for backtracking
         """
         super().__init__()
+        if not 0 <= penalty <= 1:
+            raise ValueError("penalty must be between 0 and 1")
+        if max_retries < 1:
+            raise ValueError("max_retries must be at least 1")
+            
         self.disallowed_tokens = disallowed_tokens or set()
         self.disallowed_phrases = disallowed_phrases or []
-        self.penalty = max(0.0, min(1.0, penalty))
-        self.max_retries = max(1, max_retries)
+        self.penalty = penalty
+        self.max_retries = max_retries
     
     def _apply_sampling(self, logits: torch.Tensor) -> torch.Tensor:
         """

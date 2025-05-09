@@ -30,8 +30,11 @@ class TopKSampler(BaseSampler):
         Returns:
             torch.Tensor: Top-K filtered logits
         """
+        vocab_size = logits.size(-1)
+        k = min(self.k, vocab_size)  # Ensure k doesn't exceed vocabulary size
+        
         # Get the top k values and indices
-        top_k_values, top_k_indices = torch.topk(logits, self.k, dim=-1)
+        top_k_values, top_k_indices = torch.topk(logits, k, dim=-1)
         
         # Create a new tensor of zeros with the same shape as logits
         filtered_logits = torch.full_like(logits, float('-inf'))

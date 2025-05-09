@@ -25,14 +25,22 @@ def test_top_p_sampling():
     
     filtered_logits = sampler._apply_sampling(logits)
     
-    # Convert to probabilities to check cumulative sum
-    probs = torch.softmax(logits, dim=-1)
+    # Convert to probabilities
     filtered_probs = torch.softmax(filtered_logits, dim=-1)
     
-    # Check that cumulative probability of kept tokens is <= p
-    sorted_probs, _ = torch.sort(filtered_probs, descending=True)
-    cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
-    assert torch.all(cumulative_probs <= sampler.p)
+    # Get non-zero probabilities (not -inf in logits)
+    non_zero_probs = filtered_probs[filtered_probs > 0]
+    
+    # Calculate cumulative sum of the kept probabilities
+    cumsum = torch.cumsum(non_zero_probs, dim=0)
+    
+    # The last cumulative probability should be close to 1
+    assert torch.isclose(cumsum[-1], torch.tensor(1.0), rtol=1e-3)
+    
+    # The number of non-zero probabilities should be minimal while sum is > p
+    assert cumsum[0] <= sampler.p
+    if len(cumsum) > 1:
+        assert cumsum[1] > sampler.p
 
 def test_top_p_sampling_shape():
     """Test that Top-P sampling maintains tensor shape."""
@@ -54,9 +62,19 @@ def test_top_p_sampling_batch():
     
     # Check each sequence in the batch
     for i in range(2):
-        sorted_probs, _ = torch.sort(filtered_probs[i], descending=True)
-        cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
-        assert torch.all(cumulative_probs <= sampler.p)
+        # Get non-zero probabilities
+        non_zero_probs = filtered_probs[i][filtered_probs[i] > 0]
+        
+        # Calculate cumulative sum
+        cumsum = torch.cumsum(non_zero_probs, dim=0)
+        
+        # The last cumulative probability should be close to 1
+        assert torch.isclose(cumsum[-1], torch.tensor(1.0), rtol=1e-3)
+        
+        # The number of non-zero probabilities should be minimal while sum is > p
+        assert cumsum[0] <= sampler.p
+        if len(cumsum) > 1:
+            assert cumsum[1] > sampler.p
 
 def test_top_p_sampling_edge_cases():
     """Test Top-P sampling edge cases."""

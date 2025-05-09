@@ -40,11 +40,10 @@ class TopPSampler(BaseSampler):
         cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
         
         # Create a mask for tokens to keep
-        # Remove tokens with cumulative probability above the threshold
+        # Keep tokens until cumulative probability exceeds p
         sorted_indices_to_remove = cumulative_probs > self.p
         
-        # Shift the indices to the right to keep also the first token above the threshold
-        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        # Always keep at least one token
         sorted_indices_to_remove[..., 0] = 0
         
         # Create a boolean mask of the same shape as the input

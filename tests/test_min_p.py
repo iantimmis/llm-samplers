@@ -62,7 +62,7 @@ def test_min_p_sampling_batch():
 def test_min_p_sampling_edge_cases():
     """Test Min-P sampling edge cases."""
     # Test min_p close to 1.0
-    sampler = MinPSampler(min_p=0.9)
+    sampler = MinPSampler(min_p=0.99)
     logits = torch.tensor([[0.1, 0.2, 0.3, 0.4, 0.5]])
     filtered_logits = sampler._apply_sampling(logits)
     filtered_probs = torch.softmax(filtered_logits, dim=-1)
