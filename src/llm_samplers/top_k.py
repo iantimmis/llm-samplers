@@ -68,7 +68,6 @@ class TopKSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
-        batch_size = input_ids.shape[0]
         generated = input_ids.clone()
 
         for _ in range(max_length):

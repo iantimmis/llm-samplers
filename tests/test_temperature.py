@@ -20,7 +20,6 @@ def test_temperature_sampler_initialization():
 
 def test_temperature_sampling():
     """Test temperature sampling behavior."""
-    sampler = TemperatureSampler(temperature=0.5)
     logits = torch.tensor([[1.0, 2.0, 3.0]])
 
     # Test that higher temperature makes distribution more uniform
