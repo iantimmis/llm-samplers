@@ -33,6 +33,11 @@ dev = [
 Homepage = "https://github.com/iantimmis/samplers"
 Repository = "https://github.com/iantimmis/samplers.git"
 
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+fix = true
+
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
@@ -70,11 +75,6 @@ max-complexity = 10
 
 [tool.ruff.isort]
 known-first-party = ["llm_samplers"] 
-
-[tool.ruff]
-line-length = 88
-target-version = "py312"
-fix = true
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
