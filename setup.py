@@ -9,6 +9,12 @@ setup(
         "transformers>=4.30.0",
         "numpy>=1.24.0",
     ],
+    extras_require={
+        "dev": [
+            "pytest>=7.0.0",
+            "ruff>=0.2.0",
+        ],
+    },
     author="Ian Timmis",
     author_email="ianmtimmis@gmail.com",
     description="A library for advanced LLM sampling techniques",

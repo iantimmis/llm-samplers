@@ -1,1 +1,1 @@
-"""Test package for samplers.""" 
+"""Test package for samplers."""

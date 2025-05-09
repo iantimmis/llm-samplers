@@ -48,10 +48,10 @@ source .venv/bin/activate  # On Unix/macOS
 
 ```bash
 # Using pip
-pip install -e .
+pip install -e ".[dev]"  # Includes development dependencies
 
 # Using uv (recommended)
-uv pip install -e .
+uv pip install -e .  # uv installs dev dependencies by default
 ```
 
 ## Development
@@ -61,9 +61,6 @@ uv pip install -e .
 The test suite uses pytest. To run the tests:
 
 ```bash
-# Install test dependencies
-pip install pytest
-
 # Run all tests
 python -m pytest tests/
 
@@ -73,6 +70,20 @@ python -m pytest tests/ -v
 # Run a specific test file
 python -m pytest tests/test_temperature.py
 ```
+
+### Code Quality
+
+This project uses Ruff for linting and code formatting. To check your code:
+
+```bash
+# Run Ruff linter
+ruff check .
+
+# Run Ruff formatter
+ruff format .
+```
+
+The project is configured with a GitHub Action that automatically runs Ruff on all pull requests.
 
 ## Usage
 
