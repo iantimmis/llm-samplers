@@ -33,9 +33,6 @@ dev = [
 Homepage = "https://github.com/iantimmis/samplers"
 Repository = "https://github.com/iantimmis/samplers.git"
 
-# Same as Black.
-line-length = 88
-
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
