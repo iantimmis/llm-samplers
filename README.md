@@ -1,4 +1,4 @@
-# Samplers
+# LLM Samplers
 
 A Python library for advanced LLM sampling techniques, providing a collection of sophisticated sampling methods for language models.
 
@@ -16,7 +16,7 @@ A Python library for advanced LLM sampling techniques, providing a collection of
 ### From PyPI
 
 ```bash
-pip install samplers
+pip install llm-samplers
 ```
 
 ### From Source
