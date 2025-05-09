@@ -13,8 +13,65 @@ A Python library for advanced LLM sampling techniques, providing a collection of
 
 ## Installation
 
+### From PyPI
+
 ```bash
 pip install samplers
+```
+
+### From Source
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/iantimmis/samplers.git
+cd samplers
+```
+
+2. Create and activate a virtual environment (recommended):
+
+```bash
+# Using venv
+python -m venv .venv
+source .venv/bin/activate  # On Unix/macOS
+# or
+.venv\Scripts\activate  # On Windows
+
+# Using uv (recommended)
+uv venv
+source .venv/bin/activate  # On Unix/macOS
+# or
+.venv\Scripts\activate  # On Windows
+```
+
+3. Install the package in development mode:
+
+```bash
+# Using pip
+pip install -e .
+
+# Using uv (recommended)
+uv pip install -e .
+```
+
+## Development
+
+### Running Tests
+
+The test suite uses pytest. To run the tests:
+
+```bash
+# Install test dependencies
+pip install pytest
+
+# Run all tests
+python -m pytest tests/
+
+# Run tests with verbose output
+python -m pytest tests/ -v
+
+# Run a specific test file
+python -m pytest tests/test_temperature.py
 ```
 
 ## Usage
