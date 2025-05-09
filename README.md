@@ -24,7 +24,7 @@ pip install llm-samplers
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/iantimmis/samplers.git
+git clone https://github.com/iantimmis/llm-samplers.git
 cd samplers
 ```
 
