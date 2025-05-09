@@ -76,6 +76,8 @@ python -m pytest tests/test_temperature.py
 
 ## Usage
 
+While the package is installed via `pip install llm-samplers`, you import it using `samplers`:
+
 ```python
 from samplers import TemperatureSampler, TopKSampler, TopPSampler, MinPSampler, AntiSlopSampler, XTCSampler
 
