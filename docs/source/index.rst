@@ -3,6 +3,8 @@ LLM Samplers Documentation
 
 A Python library for advanced LLM sampling techniques, providing a collection of sophisticated sampling methods for language models.
 
+This documentation is also available online at `llm-samplers.readthedocs.io <https://llm-samplers.readthedocs.io/>`_.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

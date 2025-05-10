@@ -2,6 +2,8 @@
 
 A Python library for advanced LLM sampling techniques, providing a collection of sophisticated sampling methods for language models.
 
+[![Documentation](https://img.shields.io/badge/docs-readthedocs-blue)](https://llm-samplers.readthedocs.io/)
+
 ## Features
 
 - Temperature Scaling
@@ -53,6 +55,10 @@ pip install -e ".[dev]"  # Includes development dependencies
 # Using uv (recommended)
 uv pip install -e .  # uv installs dev dependencies by default
 ```
+
+## Documentation
+
+For detailed documentation, visit [llm-samplers.readthedocs.io](https://llm-samplers.readthedocs.io/).
 
 ## Development
 
@@ -106,6 +112,8 @@ output_ids = sampler.sample(model, input_ids)
 generated_text = tokenizer.decode(output_ids[0])
 ```
 
+For more examples and detailed usage instructions, see the [documentation](https://llm-samplers.readthedocs.io/).
+
 ## Available Samplers
 
 ### Temperature Scaling
@@ -134,6 +142,8 @@ Down-weights probabilities at word & phrase level, using backtracking to retry w
 ### XTC (Exclude Top Choices)
 
 Enhances creativity by nudging the model away from its most predictable choices.
+
+For detailed information about each sampler, visit the [documentation](https://llm-samplers.readthedocs.io/).
 
 ## License
 
