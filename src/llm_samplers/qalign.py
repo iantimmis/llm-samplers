@@ -57,7 +57,6 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
-        batch_size = input_ids.shape[0]
         current_ids = input_ids.clone()
 
         # Generate initial sequences
