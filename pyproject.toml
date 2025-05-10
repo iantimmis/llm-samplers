@@ -34,10 +34,6 @@ Homepage = "https://github.com/iantimmis/llm-samplers"
 Repository = "https://github.com/iantimmis/llm-samplers.git"
 Documentation = "https://llm-samplers.readthedocs.io/"
 
-[tool.ruff]
-line-length = 88
-fix = true
-
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
@@ -66,20 +62,13 @@ exclude = [
 # Assume Python 3.9
 target-version = "py39"
 
+[tool.ruff]
+line-length = 88
+fix = true
+
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]  # Example: ignore line length
-
-[tool.ruff.lint.dummy-variable-rgx]
-# Allow unused variables when underscore-prefixed.
-pattern = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-[tool.ruff.lint.mccabe]
-# Unlike Flake8, default to a complexity level of 10.
-max-complexity = 10
-
-[tool.ruff.lint.isort]
-known-first-party = ["llm_samplers"]
 
 [tool.ruff.format]
 quote-style = "double"
