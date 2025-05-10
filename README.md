@@ -215,6 +215,8 @@ Enhances creativity by nudging the model away from its most predictable choices.
 
 Uses Markov Chain Monte Carlo (MCMC) to align model outputs with a reward model at test time without fine-tuning.
 
+Based on the paper: ["Sample, Don't Search: Rethinking Test-Time Alignment for Language Models"](https://arxiv.org/abs/2504.03790) (Faria et al., 2024)
+
 For detailed information about each sampler, visit the [documentation](https://llm-samplers.readthedocs.io/).
 
 ## Model Compatibility

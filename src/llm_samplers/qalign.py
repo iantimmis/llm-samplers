@@ -9,8 +9,14 @@ from .base import BaseSampler
 class QAlignSampler(BaseSampler):
     """QAlign sampler that uses MCMC to improve model outputs based on a reward model.
 
-    This implementation is based on the paper "Sample, Don't Search: Rethinking Test-Time Alignment
-    for Language Models" (https://arxiv.org/abs/2504.03790).
+    This implementation is based on the paper:
+    "Sample, Don't Search: Rethinking Test-Time Alignment for Language Models"
+    by Faria et al. (2024)
+    Paper: https://arxiv.org/abs/2504.03790
+
+    QAlign uses Markov Chain Monte Carlo (MCMC) to align model outputs at test time
+    without requiring model fine-tuning. It converges to sampling from the optimal
+    aligned distribution as test-time compute scales.
     """
 
     def __init__(
