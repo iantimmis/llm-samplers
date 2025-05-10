@@ -31,6 +31,12 @@ class QAlignSampler(BaseSampler):
             proposal_temp: Temperature for the proposal distribution
         """
         super().__init__()
+
+        if temperature <= 0:
+            raise ValueError("Temperature must be positive")
+        if proposal_temp <= 0:
+            raise ValueError("Proposal temperature must be positive")
+
         self.reward_model = reward_model
         self.num_steps = num_steps
         self.temperature = temperature
@@ -57,6 +63,7 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        batch_size = input_ids.shape[0]
         current_ids = input_ids.clone()
 
         # Generate initial sequences
@@ -64,10 +71,18 @@ class QAlignSampler(BaseSampler):
             logits = self._get_logits(model, current_ids)
             logits = logits / self.temperature
             next_tokens = self._sample_from_logits(logits)
+
+            # Ensure next_tokens has the correct batch dimension
+            if next_tokens.shape[0] != batch_size:
+                next_tokens = next_tokens.expand(batch_size, -1)
+
             current_ids = torch.cat([current_ids, next_tokens], dim=1)
 
             # Stop if all sequences are complete
-            if (next_tokens == model.config.eos_token_id).all():
+            if (
+                hasattr(model.config, "eos_token_id")
+                and (next_tokens == model.config.eos_token_id).all()
+            ):
                 break
 
         # Perform MCMC steps
@@ -102,17 +117,22 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Proposed sequence of token IDs
         """
-        # Randomly select a position to resample
+        batch_size = current_ids.shape[0]
         seq_len = current_ids.shape[1]
-        pos = torch.randint(0, seq_len, (current_ids.shape[0],), device=self.device)
+
+        # Randomly select a position to resample for each example in the batch
+        pos = torch.randint(0, seq_len, (batch_size,), device=self.device)
 
         # Generate new tokens from the position onwards
         proposal_ids = current_ids.clone()
-        for i in range(pos[0], seq_len):
-            logits = self._get_logits(model, proposal_ids[:, :i])
-            logits = logits / self.proposal_temp
-            next_tokens = self._sample_from_logits(logits)
-            proposal_ids[:, i] = next_tokens.squeeze(-1)
+
+        # Process each batch item separately to handle different positions
+        for b in range(batch_size):
+            for i in range(pos[b], seq_len):
+                logits = self._get_logits(model, proposal_ids[b : b + 1, :i])
+                logits = logits / self.proposal_temp
+                next_token = self._sample_from_logits(logits)
+                proposal_ids[b, i] = next_token.squeeze(-1)
 
         return proposal_ids
 
