@@ -34,12 +34,10 @@ Homepage = "https://github.com/iantimmis/llm-samplers"
 Repository = "https://github.com/iantimmis/llm-samplers.git"
 Documentation = "https://llm-samplers.readthedocs.io/"
 
-# Assume Python 3.9
-target-version = "py39"
-
 [tool.ruff]
 line-length = 88
 fix = true
+target-version = "py39"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
