@@ -12,6 +12,7 @@ A Python library for advanced LLM sampling techniques, providing a collection of
 - Min-P Sampling
 - Anti-Slop Sampling
 - XTC (Exclude Top Choices) Sampling
+- QAlign (MCMC Test-Time Alignment) Sampling
 - Model-agnostic: Works with any PyTorch-based language model
 - Compatible with Hugging Face models and custom implementations
 
@@ -209,6 +210,10 @@ Down-weights probabilities at word & phrase level, using backtracking to retry w
 ### XTC (Exclude Top Choices)
 
 Enhances creativity by nudging the model away from its most predictable choices.
+
+### QAlign
+
+Uses Markov Chain Monte Carlo (MCMC) to align model outputs with a reward model at test time without fine-tuning.
 
 For detailed information about each sampler, visit the [documentation](https://llm-samplers.readthedocs.io/).
 

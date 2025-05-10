@@ -55,4 +55,12 @@ XTC (Exclude Top Choices) Sampler
 .. automodule:: llm_samplers.xtc
    :members:
    :undoc-members:
+   :show-inheritance:
+
+QAlign Sampler
+------------
+
+.. automodule:: llm_samplers.qalign
+   :members:
+   :undoc-members:
    :show-inheritance: 

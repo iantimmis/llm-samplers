@@ -97,3 +97,24 @@ XTC sampling nudges the model away from its most predictable choices by excludin
 - To enhance creativity and diversity
 - When standard outputs are too predictable
 - For applications requiring novel or surprising content 
+
+QAlign Sampling
+------------
+
+QAlign is a test-time alignment method that uses Markov Chain Monte Carlo (MCMC) to improve model outputs based on a reward model:
+
+1. Generate an initial sequence using the base language model
+2. Perform MCMC steps with Metropolis-Hastings acceptance:
+   a. Generate a proposal by resampling a portion of the sequence
+   b. Compute rewards for current and proposed sequences
+   c. Accept proposal with probability min(1, exp(β * (proposal_reward - current_reward)))
+3. Return the final sequence after MCMC iterations
+
+**When to use:**
+- For aligning model outputs with specific objectives without fine-tuning
+- When you have a reward model that can score text quality
+- To improve model performance on specific tasks at inference time
+- As an alternative to computationally expensive fine-tuning approaches
+
+**Based on the paper:**
+"Sample, Don't Search: Rethinking Test-Time Alignment for Language Models" (https://arxiv.org/abs/2504.03790) 
