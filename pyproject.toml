@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llm-samplers"
-version = "0.1.1"
+version = "0.1.2"
 description = "A library for advanced LLM sampling techniques"
 readme = "README.md"
 requires-python = ">=3.9"
