@@ -1,4 +1,9 @@
-__version__ = "0.1.2"
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version  # backport for Python <3.8
+
+__version__ = version("llm-samplers")
 
 from .anti_slop import AntiSlopSampler
 from .base import BaseSampler
