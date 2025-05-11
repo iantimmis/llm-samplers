@@ -53,7 +53,7 @@ class BeamSearchSampler(BaseSampler):
 
             # Expand sequences and scores
             expanded_sequences = sequences.unsqueeze(1).expand(
-                batch_size, self.beam_width, -1
+                batch_size, self.beam_width, sequences.shape[-1]
             )
             expanded_scores = scores.unsqueeze(1).expand(batch_size, self.beam_width)
 
