@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 project = "LLM Samplers"
 copyright = "2023-2024, Ian Timmis"
 author = "Ian Timmis"
-version = "0.1.2"
+version = "0.1.3"
 release = version
 
 # -- General configuration ---------------------------------------------------
