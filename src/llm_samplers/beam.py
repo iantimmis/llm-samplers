@@ -52,8 +52,10 @@ class BeamSearchSampler(BaseSampler):
             topk_probs, topk_indices = torch.topk(probs, k=self.beam_width, dim=-1)
 
             # Expand sequences and scores
-            expanded_sequences = sequences.unsqueeze(1).expand(-1, self.beam_width, -1)
-            expanded_scores = scores.unsqueeze(1).expand(-1, self.beam_width)
+            expanded_sequences = sequences.unsqueeze(1).expand(
+                batch_size, self.beam_width, -1
+            )
+            expanded_scores = scores.unsqueeze(1).expand(batch_size, self.beam_width)
 
             # Add new tokens and update scores
             new_sequences = torch.cat(
