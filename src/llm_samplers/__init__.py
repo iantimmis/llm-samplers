@@ -1,3 +1,5 @@
+__version__ = "0.1.2"
+
 from .anti_slop import AntiSlopSampler
 from .base import BaseSampler
 from .min_p import MinPSampler
