@@ -60,4 +60,4 @@ def test_apply_sampling_default():
     sampler = TestSampler()
     logits = torch.randn(1, 1000)
     filtered_logits = sampler._apply_sampling(logits)
-    assert torch.allclose(logits, filtered_logits)
+    assert torch.allclose(logits.to("cpu"), filtered_logits.to("cpu"))

@@ -65,7 +65,7 @@ def test_qalign_proposal_generation(dummy_model, dummy_reward_model):
     # Check that proposal has same shape as input
     assert proposal_ids.shape == input_ids.shape
     # Check that proposal is different from input (since we're resampling)
-    assert not torch.allclose(proposal_ids, input_ids)
+    assert not torch.allclose(proposal_ids.to("cpu"), input_ids.to("cpu"))
 
 
 def test_qalign_reward_computation(dummy_reward_model):
@@ -172,4 +172,4 @@ def test_qalign_reward_influence(dummy_model):
     )
 
     # Check that outputs are different due to different reward models and beta values
-    assert not torch.allclose(high_beta_output, low_beta_output)
+    assert not torch.allclose(high_beta_output.to("cpu"), low_beta_output.to("cpu"))

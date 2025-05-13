@@ -50,4 +50,4 @@ def test_temperature_sampling_values():
 
     # Check that values are scaled by temperature
     expected = logits / 0.5
-    assert torch.allclose(filtered_logits, expected)
+    assert torch.allclose(filtered_logits.to("cpu"), expected.to("cpu"))

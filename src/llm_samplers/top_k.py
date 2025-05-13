@@ -33,6 +33,9 @@ class TopKSampler(BaseSampler):
         Returns:
             torch.Tensor: Top-K filtered logits
         """
+        # Ensure logits are on the correct device
+        logits = logits.to(self.device)
+        
         vocab_size = logits.size(-1)
         k = min(self.k, vocab_size)  # Ensure k doesn't exceed vocabulary size
 
@@ -40,7 +43,7 @@ class TopKSampler(BaseSampler):
         top_k_values, top_k_indices = torch.topk(logits, k, dim=-1)
 
         # Create a new tensor of zeros with the same shape as logits
-        filtered_logits = torch.full_like(logits, float("-inf"))
+        filtered_logits = torch.full_like(logits, float("-inf"), device=self.device)
 
         # Set the top k values in their original positions
         filtered_logits.scatter_(1, top_k_indices, top_k_values)
@@ -68,17 +71,22 @@ class TopKSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        # Move input_ids to the correct device
+        input_ids = input_ids.to(self.device)
         generated = input_ids.clone()
 
         for _ in range(max_length):
             logits = self._get_logits(model, generated)
             logits = self._apply_sampling(logits)
             next_tokens = self._sample_from_logits(logits, num_samples=1)
-
+            
+            # Ensure next_tokens are on the correct device
+            next_tokens = next_tokens.to(self.device)
             generated = torch.cat([generated, next_tokens], dim=1)
 
             # Check if all sequences have generated an EOS token
-            if (next_tokens == model.config.eos_token_id).any():
-                break
+            if hasattr(model, 'config') and hasattr(model.config, 'eos_token_id'):
+                if (next_tokens == model.config.eos_token_id).any():
+                    break
 
         return generated

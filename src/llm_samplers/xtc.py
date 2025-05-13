@@ -48,6 +48,9 @@ class XTCSampler(BaseSampler):
         Returns:
             torch.Tensor: XTC filtered logits
         """
+        # Ensure logits are on the correct device
+        logits = logits.to(self.device)
+        
         # Convert logits to probabilities
         probs = torch.softmax(logits, dim=-1)
 
@@ -56,7 +59,7 @@ class XTCSampler(BaseSampler):
 
         # Create a mask for tokens to exclude
         # Exclude tokens that are both in top-k and above the exclusion threshold
-        exclusion_mask = torch.zeros_like(probs, dtype=torch.bool)
+        exclusion_mask = torch.zeros_like(probs, dtype=torch.bool, device=self.device)
         for i in range(self.top_k):
             mask = (top_k_probs[:, i] > self.exclusion_threshold) & (
                 top_k_probs[:, i] > self.min_probability
@@ -90,17 +93,22 @@ class XTCSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        # Move input_ids to the correct device
+        input_ids = input_ids.to(self.device)
         generated = input_ids.clone()
 
         for _ in range(max_length):
             logits = self._get_logits(model, generated)
             logits = self._apply_sampling(logits)
             next_tokens = self._sample_from_logits(logits, num_samples=1)
-
+            
+            # Ensure next_tokens are on the correct device
+            next_tokens = next_tokens.to(self.device)
             generated = torch.cat([generated, next_tokens], dim=1)
 
             # Check if all sequences have generated an EOS token
-            if (next_tokens == model.config.eos_token_id).any():
-                break
+            if hasattr(model, 'config') and hasattr(model.config, 'eos_token_id'):
+                if (next_tokens == model.config.eos_token_id).any():
+                    break
 
         return generated
