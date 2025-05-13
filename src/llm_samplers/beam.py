@@ -87,7 +87,7 @@ class BeamSearchSampler(BaseSampler):
                 # Get logits for all beam sequences
                 logits = self._get_logits(model, flat_sequences)
                 # Reshape logits to [batch, num_beams, vocab] using actual tensor shape
-                expected_shape = (sequences.shape[0] * sequences.shape[1], -1)
+                # expected_shape = (sequences.shape[0] * sequences.shape[1], -1)
                 if logits.shape[0] == 1 and logits.shape[1] == logits.shape[-1]:
                     # Dummy model returns [1, vocab_size], expand to [batch*num_beams, vocab_size]
                     logits = logits.expand(sequences.shape[0] * sequences.shape[1], logits.shape[-1])
