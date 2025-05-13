@@ -125,3 +125,23 @@ Unlike other test-time optimization methods that search for a single optimal out
 - When you have a reward model that can score text quality
 - To improve model performance on specific tasks at inference time
 - As an alternative to computationally expensive fine-tuning approaches 
+
+Beam Search
+----------
+
+Beam search is a breadth-first search algorithm that maintains the top k most promising sequences at each step:
+
+1. Start with the initial sequence
+2. At each step:
+   a. Generate all possible next tokens for each sequence
+   b. Score each new sequence using log probabilities
+   c. Keep only the top k sequences
+3. Return the best sequences after reaching max_length
+
+The algorithm uses a beam width parameter to control how many sequences are maintained at each step. A larger beam width explores more possibilities but requires more computation.
+
+**When to use:**
+- For tasks requiring high-quality, deterministic outputs
+- When you need multiple diverse but high-probability sequences
+- In scenarios where finding the most likely sequence is important
+- For applications where you can afford the computational cost 

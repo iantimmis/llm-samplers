@@ -9,6 +9,14 @@ Base Sampler
    :undoc-members:
    :show-inheritance:
 
+Beam Search Sampler
+-----------------
+
+.. automodule:: llm_samplers.beam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Temperature Sampler
 ------------------
 
