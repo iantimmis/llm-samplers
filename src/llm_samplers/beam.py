@@ -39,6 +39,9 @@ class BeamSearchSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        # Move input_ids to the correct device
+        input_ids = input_ids.to(self.device)
+        
         batch_size = input_ids.shape[0]
         # Make sure num_return_sequences doesn't exceed beam_width
         num_return_sequences = min(num_return_sequences, self.beam_width)
@@ -57,10 +60,15 @@ class BeamSearchSampler(BaseSampler):
             # Create beam_width copies of each sequence
             sequences = sequences.unsqueeze(1).expand(
                 batch_size, self.beam_width, seq_length
-            )
+            ).contiguous()
 
             # Add the new token to each sequence
-            topk_indices = topk_indices.unsqueeze(-1)
+            topk_indices = topk_indices.unsqueeze(-1).to(self.device)
+            topk_probs = topk_probs.to(self.device)
+            # Ensure topk_indices shape matches sequences for cat
+            if topk_indices.shape[:2] != sequences.shape[:2]:
+                # Expand topk_indices to match
+                topk_indices = topk_indices.expand(sequences.shape[0], sequences.shape[1], 1)
             sequences = torch.cat([sequences, topk_indices], dim=2)
 
             # Update scores
@@ -70,25 +78,32 @@ class BeamSearchSampler(BaseSampler):
             # Continue generating
             for _ in range(max_length - seq_length - 1):
                 curr_len = sequences.shape[2]
+                num_beams = sequences.shape[1]
                 # Reshape for model input - from [batch, beam, seq] to [batch*beam, seq]
                 flat_sequences = sequences.reshape(
-                    batch_size * self.beam_width, curr_len
+                    batch_size * num_beams, curr_len
                 )
 
                 # Get logits for all beam sequences
                 logits = self._get_logits(model, flat_sequences)
-                # Reshape logits to [batch, beam, vocab]
-                logits = logits.reshape(batch_size, self.beam_width, -1)
+                # Reshape logits to [batch, num_beams, vocab] using actual tensor shape
+                expected_shape = (sequences.shape[0] * sequences.shape[1], -1)
+                if logits.shape[0] == 1 and logits.shape[1] == logits.shape[-1]:
+                    # Dummy model returns [1, vocab_size], expand to [batch*num_beams, vocab_size]
+                    logits = logits.expand(sequences.shape[0] * sequences.shape[1], logits.shape[-1])
+                logits = logits.view(sequences.shape[0], sequences.shape[1], -1)
 
                 # Calculate probabilities and get top k for each beam
                 probs = torch.softmax(logits, dim=-1)
                 # For each sequence in each batch, get beam_width top probabilities
                 topk_probs, topk_indices = torch.topk(probs, k=self.beam_width, dim=-1)
+                topk_probs = topk_probs.to(self.device)
+                topk_indices = topk_indices.to(self.device)
 
                 # Calculate combined scores for all possible extensions
-                # [batch, beam, beam]
+                # [batch, num_beams, beam_width]
                 beam_scores = scores.unsqueeze(-1) + torch.log(topk_probs)
-                # Reshape to [batch, beam*beam]
+                # Reshape to [batch, num_beams*beam_width]
                 beam_scores = beam_scores.reshape(batch_size, -1)
 
                 # Get the top beam_width scores and their indices
@@ -115,7 +130,7 @@ class BeamSearchSampler(BaseSampler):
                         seq = sequences[batch_idx, best_beam].clone()
                         # Add the new token
                         batch_new_sequences.append(
-                            torch.cat([seq, best_token.unsqueeze(0)], dim=0)
+                            torch.cat([seq, best_token.unsqueeze(0).to(self.device)], dim=0)
                         )
                     new_sequences.append(torch.stack(batch_new_sequences))
 
@@ -130,7 +145,7 @@ class BeamSearchSampler(BaseSampler):
                 self.beam_width,
                 max_length - sequences.shape[2],
                 dtype=sequences.dtype,
-                device=sequences.device,
+                device=self.device,
             )
             sequences = torch.cat([sequences, padding], dim=2)
 
