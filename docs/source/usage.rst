@@ -184,4 +184,19 @@ Enhances creativity by nudging the model away from its most predictable choices:
     # Initialize with default parameters
     sampler = XTCSampler()
 
+Beam Search
+~~~~~~~~~~
+
+A breadth-first search algorithm that maintains the top k most promising sequences:
+
+.. code-block:: python
+
+    from llm_samplers import BeamSearchSampler
+
+    # Initialize with beam width 5
+    sampler = BeamSearchSampler(beam_width=5)
+    
+    # Generate with multiple return sequences
+    output_ids = sampler.sample(model, input_ids, max_length=100, num_return_sequences=3)
+
 For more detailed information about each sampler's parameters and behavior, see the :doc:`API Reference <api>`. 

@@ -26,10 +26,12 @@ Features
 - Min-P Sampling
 - Anti-Slop Sampling
 - XTC (Exclude Top Choices) Sampling
+- Beam Search
+- QAlign (MCMC Test-Time Alignment) Sampling
 
 Indices and tables
 -----------------
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search` 
+* :ref:`search`

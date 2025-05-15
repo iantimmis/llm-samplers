@@ -145,4 +145,39 @@ Using Anti-Slop for Higher Quality
     
     # Decode and print result
     generated_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-    print(generated_text) 
+    print(generated_text)
+
+Using Beam Search for Deterministic Outputs
+-----------------------------------------
+
+.. code-block:: python
+
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from llm_samplers import BeamSearchSampler
+
+    # Load model and tokenizer
+    model_name = "gpt2-medium"
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    # Initialize Beam Search sampler
+    sampler = BeamSearchSampler(beam_width=5)
+
+    # Setup input
+    input_text = "Summarize the key benefits of renewable energy:"
+    input_ids = tokenizer.encode(input_text, return_tensors="pt")
+
+    # Generate multiple sequences
+    output_ids = sampler.sample(
+        model,
+        input_ids,
+        max_length=150,
+        num_return_sequences=3  # Return 3 different outputs
+    )
+    
+    # Decode and print results
+    for i, ids in enumerate(output_ids[0]):
+        generated_text = tokenizer.decode(ids, skip_special_tokens=True)
+        print(f"\n=== Sequence {i+1} ===")
+        print(generated_text) 
