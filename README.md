@@ -1,8 +1,14 @@
-# LLM Samplers
+<div align="center">
+<h1> LLM Samplers </h1>
 
 A Python library for advanced LLM sampling techniques, providing a collection of sophisticated sampling methods for language models. This library is model-agnostic and works with any PyTorch-based language model that follows a simple interface.
 
 [![Documentation](https://img.shields.io/badge/docs-readthedocs-blue)](https://llm-samplers.readthedocs.io/)
+[![Unit Tests](https://github.com/iantimmis/llm-samplers/actions/workflows/test.yml/badge.svg)](https://github.com/iantimmis/llm-samplers/actions/workflows/test.yml)
+
+</div>
+
+---
 
 ## Features
 
@@ -12,6 +18,7 @@ A Python library for advanced LLM sampling techniques, providing a collection of
 - Min-P Sampling
 - Anti-Slop Sampling
 - XTC (Exclude Top Choices) Sampling
+- Beam Search
 - QAlign (MCMC Test-Time Alignment) Sampling
 - Model-agnostic: Works with any PyTorch-based language model
 - Compatible with Hugging Face models and custom implementations
@@ -210,6 +217,19 @@ Down-weights probabilities at word & phrase level, using backtracking to retry w
 ### XTC (Exclude Top Choices)
 
 Enhances creativity by nudging the model away from its most predictable choices.
+
+### Beam Search
+
+A breadth-first search algorithm that maintains the top k most promising sequences at each step:
+
+1. Start with the initial sequence
+2. At each step:
+   - Generate all possible next tokens for each sequence
+   - Score each new sequence using log probabilities
+   - Keep only the top k sequences with highest scores
+3. Return the best sequences after reaching max_length
+
+Useful for tasks requiring high-quality, deterministic outputs or when you need multiple diverse but high-probability sequences.
 
 ### QAlign
 
