@@ -13,6 +13,7 @@ from .temperature import TemperatureSampler
 from .top_k import TopKSampler
 from .top_p import TopPSampler
 from .xtc import XTCSampler
+from .beam import BeamSearchSampler
 
 __all__ = [
     "BaseSampler",
@@ -23,4 +24,5 @@ __all__ = [
     "AntiSlopSampler",
     "XTCSampler",
     "QAlignSampler",
+    "BeamSearchSampler",
 ]
