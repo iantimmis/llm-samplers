@@ -69,6 +69,8 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        # Move input_ids to the correct device
+        input_ids = input_ids.to(self.device)
         batch_size = input_ids.shape[0]
         current_ids = input_ids.clone()
 
@@ -77,6 +79,9 @@ class QAlignSampler(BaseSampler):
             logits = self._get_logits(model, current_ids)
             logits = logits / self.temperature
             next_tokens = self._sample_from_logits(logits)
+            
+            # Ensure next_tokens are on the correct device
+            next_tokens = next_tokens.to(self.device)
 
             # Ensure next_tokens has the correct batch dimension
             if next_tokens.shape[0] != batch_size:
@@ -85,11 +90,9 @@ class QAlignSampler(BaseSampler):
             current_ids = torch.cat([current_ids, next_tokens], dim=1)
 
             # Stop if all sequences are complete
-            if (
-                hasattr(model.config, "eos_token_id")
-                and (next_tokens == model.config.eos_token_id).all()
-            ):
-                break
+            if hasattr(model, 'config') and hasattr(model.config, 'eos_token_id'):
+                if (next_tokens == model.config.eos_token_id).all():
+                    break
 
         # Perform MCMC steps
         for _ in range(self.num_steps):
@@ -106,7 +109,7 @@ class QAlignSampler(BaseSampler):
             ).clamp(0, 1)
 
             # Accept or reject
-            accept = torch.rand_like(acceptance_prob) < acceptance_prob
+            accept = torch.rand_like(acceptance_prob, device=self.device) < acceptance_prob
             current_ids = torch.where(
                 accept.unsqueeze(-1).expand_as(current_ids), proposal_ids, current_ids
             )
@@ -123,6 +126,8 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Proposed sequence of token IDs
         """
+        # Ensure current_ids are on the correct device
+        current_ids = current_ids.to(self.device)
         batch_size = current_ids.shape[0]
         seq_len = current_ids.shape[1]
 
@@ -138,6 +143,7 @@ class QAlignSampler(BaseSampler):
                 logits = self._get_logits(model, proposal_ids[b : b + 1, :i])
                 logits = logits / self.proposal_temp
                 next_token = self._sample_from_logits(logits)
+                next_token = next_token.to(self.device)
                 proposal_ids[b, i] = next_token.squeeze(-1)
 
         return proposal_ids
@@ -151,6 +157,21 @@ class QAlignSampler(BaseSampler):
         Returns:
             torch.Tensor: Reward scores
         """
+        # Ensure input_ids are on the correct device
+        input_ids = input_ids.to(self.device)
+        
+        # Move reward model to the same device as input_ids
+        # Check if reward model has parameters before trying to move it
+        try:
+            params = list(self.reward_model.parameters())
+            if params and params[0].device != self.device:
+                self.reward_model = self.reward_model.to(self.device)
+        except (StopIteration, AttributeError):
+            # Reward model might be a simple function or have no parameters
+            pass
+            
         with torch.no_grad():
             reward = self.reward_model(input_ids)
-        return reward
+            
+        # Ensure reward is on the correct device
+        return reward.to(self.device)

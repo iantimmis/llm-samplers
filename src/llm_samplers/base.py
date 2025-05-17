@@ -45,10 +45,15 @@ class BaseSampler(ABC):
         Returns:
             torch.Tensor: Logits from the model
         """
+        # Ensure input_ids are on the correct device
+        input_ids = input_ids.to(self.device)
+        
         with torch.no_grad():
             outputs = model(input_ids)
             logits = outputs.logits[:, -1, :]
-        return logits
+            
+        # Ensure logits are on the correct device
+        return logits.to(self.device)
 
     def _apply_sampling(self, logits: torch.Tensor) -> torch.Tensor:
         """
@@ -60,7 +65,8 @@ class BaseSampler(ABC):
         Returns:
             torch.Tensor: Processed logits ready for sampling
         """
-        return logits
+        # Ensure logits are on the correct device
+        return logits.to(self.device)
 
     def _sample_from_logits(
         self, logits: torch.Tensor, num_samples: int = 1
@@ -75,5 +81,7 @@ class BaseSampler(ABC):
         Returns:
             torch.Tensor: Sampled token IDs
         """
+        # Ensure logits are on the correct device
+        logits = logits.to(self.device)
         probs = torch.softmax(logits, dim=-1)
         return torch.multinomial(probs, num_samples=num_samples)

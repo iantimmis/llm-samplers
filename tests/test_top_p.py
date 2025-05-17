@@ -85,7 +85,8 @@ def test_top_p_sampling_edge_cases():
     sampler = TopPSampler(p=1.0)
     logits = torch.tensor([[0.1, 0.2, 0.3, 0.4, 0.5]])
     filtered_logits = sampler._apply_sampling(logits)
-    assert torch.allclose(filtered_logits, logits)
+    # Move tensors to the same device for comparison
+    assert torch.allclose(filtered_logits.to("cpu"), logits.to("cpu"))
 
     # Test very small p
     sampler = TopPSampler(p=0.1)

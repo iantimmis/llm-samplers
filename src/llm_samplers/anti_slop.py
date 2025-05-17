@@ -49,6 +49,8 @@ class AntiSlopSampler(BaseSampler):
         Returns:
             torch.Tensor: Anti-Slop filtered logits
         """
+        # Ensure logits are on the correct device
+        logits = logits.to(self.device)
         filtered_logits = logits.clone()
 
         # Apply penalty to disallowed tokens
@@ -68,13 +70,16 @@ class AntiSlopSampler(BaseSampler):
         Returns:
             bool: True if a disallowed phrase is found
         """
+        # Ensure generated is on the correct device
+        generated = generated.to(self.device)
+        
         for phrase in self.disallowed_phrases:
             phrase_len = len(phrase)
+            # Create a tensor from the phrase list and move it to the correct device
+            phrase_tensor = torch.tensor(phrase, device=self.device)
+            
             for i in range(generated.shape[1] - phrase_len + 1):
-                if torch.all(
-                    generated[:, i : i + phrase_len]
-                    == torch.tensor(phrase, device=generated.device)
-                ):
+                if torch.all(generated[:, i : i + phrase_len] == phrase_tensor):
                     return True
         return False
 
@@ -99,6 +104,8 @@ class AntiSlopSampler(BaseSampler):
         Returns:
             torch.Tensor: Generated token IDs
         """
+        # Move input_ids to the correct device
+        input_ids = input_ids.to(self.device)
         generated = input_ids.clone()
         retry_count = 0
 
@@ -109,7 +116,9 @@ class AntiSlopSampler(BaseSampler):
                 logits = self._get_logits(model, current_generated)
                 logits = self._apply_sampling(logits)
                 next_tokens = self._sample_from_logits(logits, num_samples=1)
-
+                
+                # Ensure next_tokens are on the correct device
+                next_tokens = next_tokens.to(self.device)
                 current_generated = torch.cat([current_generated, next_tokens], dim=1)
 
                 # Check for disallowed phrases
@@ -118,8 +127,9 @@ class AntiSlopSampler(BaseSampler):
                     break
 
                 # Check if all sequences have generated an EOS token
-                if (next_tokens == model.config.eos_token_id).any():
-                    return current_generated
+                if hasattr(model, 'config') and hasattr(model.config, 'eos_token_id'):
+                    if (next_tokens == model.config.eos_token_id).any():
+                        return current_generated
 
             # If we've reached max_length without finding a disallowed phrase
             if not self._check_phrases(current_generated):

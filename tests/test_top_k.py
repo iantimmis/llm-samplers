@@ -31,7 +31,7 @@ def test_top_k_sampling():
 
     # Check that the kept values are the highest ones
     kept_values = filtered_logits[non_inf_mask]
-    assert torch.allclose(kept_values, torch.tensor([4.0, 5.0]))
+    assert torch.allclose(kept_values.to("cpu"), torch.tensor([4.0, 5.0]))
 
 
 def test_top_k_sampling_shape():
@@ -61,10 +61,10 @@ def test_top_k_sampling_edge_cases():
     sampler = TopKSampler(k=5)
     logits = torch.tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
     filtered_logits = sampler._apply_sampling(logits)
-    assert torch.allclose(filtered_logits, logits)  # All values should be kept
+    assert torch.allclose(filtered_logits.to("cpu"), logits.to("cpu"))  # All values should be kept
 
     # Test k larger than vocabulary size
     sampler = TopKSampler(k=10)
     logits = torch.tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
     filtered_logits = sampler._apply_sampling(logits)
-    assert torch.allclose(filtered_logits, logits)  # All values should be kept
+    assert torch.allclose(filtered_logits.to("cpu"), logits.to("cpu"))  # All values should be kept
