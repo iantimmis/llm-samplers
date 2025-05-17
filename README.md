@@ -6,6 +6,10 @@ A Python library for advanced LLM sampling techniques, providing a collection of
 [![Documentation](https://img.shields.io/badge/docs-readthedocs-blue)](https://llm-samplers.readthedocs.io/)
 [![Unit Tests](https://github.com/iantimmis/llm-samplers/actions/workflows/test.yml/badge.svg)](https://github.com/iantimmis/llm-samplers/actions/workflows/test.yml)
 [![PyPI](https://badge.fury.io/py/llm-samplers.svg)](https://badge.fury.io/py/llm-samplers)
+[![Python](https://img.shields.io/pypi/pyversions/llm-samplers.svg)](https://pypi.org/project/llm-samplers/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Downloads](https://static.pepy.tech/badge/llm-samplers)](https://pepy.tech/project/llm-samplers)
 
 </div>
 
